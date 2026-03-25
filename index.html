@@ -7,7 +7,6 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&display=swap" rel="stylesheet">
 
-<!-- PWA -->
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#2563eb">
 
@@ -16,11 +15,22 @@
   --blue:#2563eb;
   --light:#e0e7ff;
   --bg:#f1f5f9;
+  --card:#ffffff;
+  --text:#000000;
   --muted:#64748b;
   --active:#dbeafe;
 }
 
-*{box-sizing:border-box;font-family:Inter,sans-serif;}
+body.dark{
+  --bg:#0f172a;
+  --card:#1e293b;
+  --text:#f1f5f9;
+  --muted:#94a3b8;
+  --light:#1e3a8a;
+  --active:#1e40af;
+}
+
+*{box-sizing:border-box;font-family:Inter,sans-serif;color:var(--text);}
 body{margin:0;background:var(--bg);}
 
 header{
@@ -32,17 +42,16 @@ header{
   align-items:center;
 }
 
-h1{font-family:Poppins;margin:0;font-size:20px;}
-.menu-btn{font-size:22px;cursor:pointer;}
+h1{font-family:Poppins;margin:0;font-size:20px;color:white;}
+.menu-btn{font-size:22px;cursor:pointer;color:white;}
 
-/* MENU */
 .side-menu{
   position:fixed;
   top:0;
   right:-100%;
   width:260px;
   height:100%;
-  background:white;
+  background:var(--card);
   box-shadow:-5px 0 15px rgba(0,0,0,0.1);
   padding:16px;
   transition:0.3s;
@@ -57,13 +66,30 @@ h1{font-family:Poppins;margin:0;font-size:20px;}
   padding:10px;
   border-radius:10px;
   background:var(--light);
+  cursor:pointer;
 }
 
-/* LAYOUT */
+/* DARK MODE ITEM */
+.dark-toggle{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+/* ICON ANIMATION */
+.dark-icon{
+  transition:transform 0.3s ease, opacity 0.2s ease;
+}
+
+/* slight animation on toggle */
+body.dark .dark-icon{
+  transform:rotate(180deg) scale(1.1);
+}
+
 .container{padding:16px;max-width:520px;margin:auto;}
 
 .card{
-  background:white;
+  background:var(--card);
   border-radius:18px;
   padding:14px;
   margin-bottom:16px;
@@ -94,7 +120,6 @@ h1{font-family:Poppins;margin:0;font-size:20px;}
   align-items:center;
 }
 
-/* PILLS */
 .bar{
   background:var(--light);
   color:var(--blue);
@@ -123,6 +148,7 @@ input{
   padding:6px 2px;
   margin-top:6px;
   font-size:14px;
+  background:transparent;
 }
 
 .big{
@@ -155,9 +181,14 @@ input{
   <div class="menu-btn" onclick="menu.classList.add('open')">☰</div>
 </header>
 
-<!-- MENU -->
 <div class="side-menu" id="menu">
   <div class="close-btn" onclick="menu.classList.remove('open')">✕</div>
+
+  <!-- DARK MODE -->
+  <div class="menu-item dark-toggle" onclick="toggleDarkMode()">
+    <span>Dark Mode</span>
+    <span class="dark-icon" id="darkIcon">🌙</span>
+  </div>
 
   <div class="menu-item">
     <b>Disclaimer</b><br><br>
@@ -172,7 +203,6 @@ input{
 
 <div class="container">
 
-<!-- LMP + EDD -->
 <div class="row">
   <div class="card">
     <div class="bar">Last Menstrual Period</div>
@@ -187,7 +217,6 @@ input{
   </div>
 </div>
 
-<!-- GA -->
 <div class="card">
   <div class="bar-line">
     <div>
@@ -204,14 +233,12 @@ input{
   <div class="sub" id="dayCount"></div>
 </div>
 
-<!-- TRIMESTERS -->
 <div class="tri-row">
   <div class="card tri center" id="tri1"><div class="bar">First Trimester</div><div id="t1"></div></div>
   <div class="card tri center" id="tri2"><div class="bar">Second Trimester</div><div id="t2"></div></div>
   <div class="card tri center" id="tri3"><div class="bar">Third Trimester</div><div id="t3"></div></div>
 </div>
 
-<!-- ANTI D -->
 <div class="card">
   <div class="bar-line">
     <div class="bar">Anti-D Prophylaxis (If Rh Negative)</div>
@@ -220,7 +247,6 @@ input{
   <div id="antiD"></div>
 </div>
 
-<!-- GBS -->
 <div class="card">
   <div class="bar-line">
     <div class="bar">Group B Streptococcus Screening</div>
@@ -232,7 +258,26 @@ input{
 </div>
 
 <script>
-// PWA SW
+// DARK MODE
+const darkIcon = document.getElementById("darkIcon");
+
+if(localStorage.getItem("dark") === "true"){
+  document.body.classList.add("dark");
+}
+
+function updateIcon(){
+  darkIcon.textContent = document.body.classList.contains("dark") ? "☀️" : "🌙";
+}
+
+function toggleDarkMode(){
+  document.body.classList.toggle("dark");
+  localStorage.setItem("dark", document.body.classList.contains("dark"));
+  updateIcon();
+}
+
+updateIcon();
+
+// PWA
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("sw.js");
 }
@@ -262,25 +307,18 @@ function formatGA(w,d){
 }
 
 function updateAll(){
-
   if(!lmp.value) return;
 
   let lmpDate = new Date(lmp.value);
-
-  if(lmpDate > today){
-    lmp.value="";
-    return;
-  }
+  if(lmpDate > today){ lmp.value=""; return; }
 
   let refDate = gaDate.value ? new Date(gaDate.value) : today;
-
   if(refDate < lmpDate){
     gaDate.value = lmp.value;
     refDate = lmpDate;
   }
 
   const days = Math.floor((refDate - lmpDate)/86400000);
-
   const w = Math.floor(days/7);
   const d = days%7;
 
@@ -288,16 +326,9 @@ function updateAll(){
   dayCount.innerText = `Day ${days} / 280`;
 
   const eddDate = new Date(lmpDate);
-  eddDate.setDate(eddDate.getDate()+280);
+  eddDate.setMonth(eddDate.getMonth()+9);
+  eddDate.setDate(eddDate.getDate()+7);
   edd.value = eddDate.toISOString().split("T")[0];
-
-  tri1.classList.remove("active");
-  tri2.classList.remove("active");
-  tri3.classList.remove("active");
-
-  if(days<84) tri1.classList.add("active");
-  else if(days<189) tri2.classList.add("active");
-  else tri3.classList.add("active");
 
   const t1Date = new Date(lmpDate); t1Date.setDate(t1Date.getDate()+84);
   const t2Date = new Date(lmpDate); t2Date.setDate(t2Date.getDate()+189);
@@ -311,6 +342,14 @@ function updateAll(){
 
   const g = new Date(lmpDate); g.setDate(g.getDate()+252);
   gbs.innerHTML = formatDate(g);
+
+  tri1.classList.remove("active");
+  tri2.classList.remove("active");
+  tri3.classList.remove("active");
+
+  if(days<84) tri1.classList.add("active");
+  else if(days<189) tri2.classList.add("active");
+  else tri3.classList.add("active");
 }
 
 lmp.onchange = updateAll;
@@ -321,7 +360,9 @@ edd.onchange = ()=>{
 
   const eddDate = new Date(edd.value);
   const l = new Date(eddDate);
-  l.setDate(l.getDate()-280);
+
+  l.setMonth(l.getMonth()-9);
+  l.setDate(l.getDate()-7);
 
   if(l > today) return;
 
