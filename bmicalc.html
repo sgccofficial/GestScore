@@ -287,11 +287,18 @@ height.oninput = calculate;
 //Menu Update
 function toggleApps(){
   let list = document.getElementById("appsList");
-  list.style.display = (list.style.display === "none") ? "block" : "none";
-}
+  let arrow = document.getElementById("appsArrow");
 
+  if(list.style.display === "block"){
+    list.style.display = "none";
+    arrow.textContent = "▾";
+  } else {
+    list.style.display = "block";
+    arrow.textContent = "▴";
+  }
+}
 function goBMI(){
-  window.location.href = "/index.html";
+  window.location.href = "./index.html";
 }
 </script>
 
