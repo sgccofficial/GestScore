@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BMI Calculator</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --blue:#2563eb;
+  --light:#e0e7ff;
+  --bg:#f1f5f9;
+  --card:#ffffff;
+  --text:#000000;
+  --muted:#64748b;
+}
+
+body.dark{
+  --bg:#0f172a;
+  --card:#1e293b;
+  --text:#f1f5f9;
+  --muted:#94a3b8;
+  --light:#1e3a8a;
+}
+
+*{box-sizing:border-box;font-family:Inter,sans-serif;color:var(--text);}
+body{margin:0;background:var(--bg);}
+
+/* HEADER */
+header{
+  background:var(--blue);
+  color:white;
+  padding:16px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+h1{font-family:Poppins;margin:0;font-size:20px;color:white;}
+.menu-btn{font-size:22px;cursor:pointer;color:white;}
+
+/* SIDE MENU */
+.side-menu{
+  position:fixed;
+  top:0;
+  right:-100%;
+  width:260px;
+  height:100%;
+  background:var(--card);
+  box-shadow:-5px 0 15px rgba(0,0,0,0.1);
+  padding:16px;
+  padding-top:50px; /* <-- added spacing from top */
+  transition:0.3s;
+  z-index:1000;
+}
+.side-menu.open{right:0;}
+
+.close-btn{
+  position:absolute;
+  top:10px;
+  right:16px;
+  font-size:22px;
+  cursor:pointer;
+}
+
+.menu-item{
+  margin-top:20px;
+  padding:10px;
+  border-radius:10px;
+  background:var(--light);
+  cursor:pointer;
+}
+
+.dark-toggle{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+/* CONTAINER */
+.container{padding:16px;max-width:520px;margin:auto;}
+
+.card{
+  background:var(--card);
+  border-radius:18px;
+  padding:14px;
+  margin-bottom:16px;
+  box-shadow:0 5px 15px rgba(0,0,0,0.05);
+}
+
+.row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+.bar{
+  background:var(--light);
+  color:var(--blue);
+  padding:5px 10px;
+  border-radius:999px;
+  font-size:12.5px;
+  font-weight:500;
+  text-align:center;
+  margin-bottom:6px;
+}
+
+.sub{
+  font-size:12px;
+  color:var(--muted);
+  text-align:center;
+}
+
+input{
+  width:100%;
+  border:none;
+  border-bottom:1px solid #ddd;
+  padding:6px 2px;
+  margin-top:6px;
+  font-size:14px;
+  background:transparent;
+  text-align:center;
+}
+
+.big{
+  font-size:28px;
+  font-weight:600;
+  text-align:center;
+  margin-top:12px;
+}
+
+.unit{
+  text-align:center;
+  font-size:12px;
+  color:var(--muted);
+  margin-top:4px;
+}
+
+.error{
+  color:red;
+  font-size:13px;
+  text-align:center;
+  margin-top:6px;
+}
+
+.cat-list{
+  margin-top:8px;
+  text-align:center;
+  font-size:17px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>BMI Calculator</h1>
+  <div class="menu-btn" onclick="menu.classList.add('open')">☰</div>
+</header>
+
+<!-- SIDE MENU -->
+<div class="side-menu" id="menu">
+
+  <div class="close-btn" onclick="menu.classList.remove('open')">✕</div>
+
+  <div class="menu-item dark-toggle" onclick="toggleDarkMode()">
+    <span>Dark Mode</span>
+    <span id="icon">🌙</span>
+  </div>
+
+  <div class="menu-item">
+    <b>Disclaimer</b><br><br>
+    This tool is for educational purposes only and should not replace clinical judgment.
+  </div>
+
+  <div class="menu-item">
+    <b>About</b><br><br>
+    ©SGCC OFFICIAL
+  </div>
+  
+  <div class="menu-item" onclick="toggleApps()" style="display:flex; justify-content:space-between; align-items:center;">
+  <span>Other Apps</span>
+  <span id="appsArrow">▾</span>
+</div>
+
+<div id="appsList" style="display:none; margin-top:10px;">
+  <div class="menu-item" onclick="menu.classList.remove('open'); goBMI()">
+    GestScore
+  </div>
+</div>
+
+</div>
+
+<div class="container">
+
+<!-- INPUT -->
+<div class="row">
+  <div class="card">
+    <div class="bar">Weight</div>
+    <div class="sub">kg</div>
+    <input type="number" id="weight">
+  </div>
+
+  <div class="card">
+    <div class="bar">Height</div>
+    <div class="sub">cm</div>
+    <input type="number" id="height">
+  </div>
+</div>
+
+<!-- RESULT -->
+<div class="card">
+  <div class="bar">Result</div>
+  <div class="big" id="result">--</div>
+  <div class="unit">kg/m²</div>
+  <div class="error" id="error"></div>
+</div>
+
+<!-- CATEGORY LIST -->
+<div class="card">
+  <div class="bar">BMI Categories</div>
+  <div class="cat-list">
+
+    <div style="color:#42a5f5">Underweight: &lt; 18.5</div>
+    <div style="color:#66bb6a">Normal: 18.5 – 24.9</div>
+    <div style="color:#ffa726">Overweight: 25 – 29.9</div>
+    <div style="color:#ef5350">Obese: ≥ 30</div>
+
+  </div>
+</div>
+
+</div>
+
+<script>
+const icon = document.getElementById("icon");
+
+// DARK MODE LOAD
+if(localStorage.getItem("dark") === "true"){
+  document.body.classList.add("dark");
+}
+
+function toggleDarkMode(){
+  document.body.classList.toggle("dark");
+  localStorage.setItem("dark", document.body.classList.contains("dark"));
+  icon.textContent = document.body.classList.contains("dark") ? "☀️" : "🌙";
+}
+
+icon.textContent = document.body.classList.contains("dark") ? "☀️" : "🌙";
+
+// BMI CALC
+function calculate(){
+  let w = weight.value;
+  let h = height.value;
+
+  error.innerText = "";
+  result.innerText = "--";
+
+  if(!w || !h){
+    error.innerText = "Enter weight and height";
+    return;
+  }
+
+  if(w<=0 || h<=0){
+    error.innerText = "Invalid values";
+    return;
+  }
+
+  let bmi = w / ((h/100)*(h/100));
+  let cat = "";
+  let color = "";
+
+  if(bmi < 18.5){ cat="Underweight"; color="#42a5f5"; }
+  else if(bmi < 24.9){ cat="Normal"; color="#66bb6a"; }
+  else if(bmi < 29.9){ cat="Overweight"; color="#ffa726"; }
+  else{ cat="Obese"; color="#ef5350"; }
+
+  result.innerText = bmi.toFixed(2) + " (" + cat + ")";
+  result.style.color = color;
+}
+
+// AUTO UPDATE
+weight.oninput = calculate;
+height.oninput = calculate;
+
+//Menu Update
+function toggleApps(){
+  let list = document.getElementById("appsList");
+  list.style.display = (list.style.display === "none") ? "block" : "none";
+}
+
+function goBMI(){
+  window.location.href = "gestscore.html";
+}
+</script>
+
+</body>
+</html>
