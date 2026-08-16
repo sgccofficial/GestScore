@@ -207,10 +207,10 @@ body.dark .dark-icon{
 
 .tri.active{
   background:var(--badge-bg);
-  border:2px solid var(--primary);
+  border:1px solid var(--primary);
+  box-shadow:0 0 0 1px var(--primary), var(--shadow);
   opacity:1;
   transform:translateY(-2px);
-  box-shadow:var(--shadow);
 }
 .tri.active .bar {
   background:transparent;
@@ -296,6 +296,27 @@ body.dark .big {
   align-items:center;
   gap:8px;
   margin-top:8px;
+}
+.action-row input[type="date"] {
+  margin-top:0;
+  width:auto;
+  flex:1;
+}
+
+@media (max-width: 480px) {
+  .row {
+    grid-template-columns: 1fr;
+  }
+  .tri-row {
+    grid-template-columns: 1fr;
+  }
+  .bar-line {
+    flex-direction: column;
+    align-items: center;
+  }
+  .action-row {
+    width: 100%;
+  }
 }
 
 .today-btn{
