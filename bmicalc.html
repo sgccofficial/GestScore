@@ -473,7 +473,7 @@ function calculate(){
   else if(bmi < 29.9){ cat="Overweight"; color="#ffa726"; }
   else if(bmi < 34.9){ cat="Obese Class I"; color="#f44336"; }
   else if(bmi < 39.9){ cat="Obese Class II"; color="#d32f2f"; }
-  else{ cat="Obese Class III (Morbid)"; color="#b71c1c"; }
+  else{ cat="Obese Class III"; color="#b71c1c"; }
 
   result.innerText = bmi.toFixed(2) + " (" + cat + ")";
   result.style.color = color;
