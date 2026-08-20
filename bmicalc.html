@@ -403,8 +403,14 @@ body.dark .big {
     <div class="cat-item" style="background-color:rgba(255, 167, 38, 0.15); color:#ff9800;">
       <span>Overweight</span><span>25 – 29.9</span>
     </div>
-    <div class="cat-item" style="background-color:rgba(239, 83, 80, 0.15); color:#f44336;">
-      <span>Obese</span><span>≥ 30</span>
+    <div class="cat-item" style="background-color:rgba(239, 68, 68, 0.15); color:#ef4444;">
+      <span>Obese Class I</span><span>30.0 – 34.9</span>
+    </div>
+    <div class="cat-item" style="background-color:rgba(185, 28, 28, 0.15); color:#b91c1c;">
+      <span>Obese Class II</span><span>35.0 – 39.9</span>
+    </div>
+    <div class="cat-item" style="background-color:rgba(127, 29, 29, 0.15); color:#7f1d1d;">
+      <span>Obese Class III (Morbid)</span><span>≥ 40.0</span>
     </div>
   </div>
 </div>
@@ -465,7 +471,9 @@ function calculate(){
   if(bmi < 18.5){ cat="Underweight"; color="#42a5f5"; }
   else if(bmi < 24.9){ cat="Normal"; color="#66bb6a"; }
   else if(bmi < 29.9){ cat="Overweight"; color="#ffa726"; }
-  else{ cat="Obese"; color="#ef5350"; }
+  else if(bmi < 34.9){ cat="Obese Class I"; color="#ef4444"; }
+  else if(bmi < 39.9){ cat="Obese Class II"; color="#b91c1c"; }
+  else{ cat="Obese Class III"; color="#7f1d1d"; }
 
   result.innerText = bmi.toFixed(2) + " (" + cat + ")";
   result.style.color = color;
