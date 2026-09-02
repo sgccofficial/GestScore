@@ -2,6 +2,7 @@
   "name": "gestscore",
   "version": "1.0.0",
   "scripts": {
-    "build": "echo 'No build step required'"
+    "build": "echo \"No build step required\"",
+    "test": "echo \"No test specified\""
   }
 }
