@@ -1,0 +1,10 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "dev.pages.gestscore.twa",
+      "sha256_cert_fingerprints": ["DC:28:C8:A4:23:92:0F:B6:E1:54:28:3C:DF:46:5C:23:28:9E:FE:CB:91:98:CD:95:E1:26:B8:AE:01:56:E4:55"]
+    }
+  }
+]
