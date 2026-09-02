@@ -2,7 +2,7 @@
   "name": "gestscore",
   "version": "1.0.0",
   "scripts": {
-    "build": "exit 0",
+    "build": "mkdir -p dist && cp *.html *.png manifest.json sw.js dist/",
     "test": "echo \"No test specified\""
   }
 }
