@@ -1,4 +1,4 @@
-const CACHE_NAME = "gestscore-v2";
+const CACHE_NAME = "gestscore-v3";
 
 self.addEventListener("install", (e) => {
   e.waitUntil(
@@ -39,9 +39,9 @@ self.addEventListener("fetch", (e) => {
         // Serve the appropriate cached HTML file based on the request URL
         const url = new URL(e.request.url);
         if (url.pathname.endsWith("bmicalc.html")) {
-          return caches.match("./bmicalc.html");
+          return caches.match("./bmicalc.html", { ignoreSearch: true });
         }
-        return caches.match("./index.html");
+        return caches.match("./index.html", { ignoreSearch: true });
       })
     );
     return;
@@ -49,7 +49,7 @@ self.addEventListener("fetch", (e) => {
 
   // Handle other requests (css, js, images)
   e.respondWith(
-    caches.match(e.request).then((res) => {
+    caches.match(e.request, { ignoreSearch: true }).then((res) => {
       return res || fetch(e.request);
     })
   );
