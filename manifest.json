@@ -18,5 +18,21 @@
       "type": "image/png",
       "purpose": "any maskable"
     }
+  ],
+  "shortcuts": [
+    {
+      "name": "GestScore",
+      "short_name": "GestScore",
+      "description": "Open GestScore Calculator",
+      "url": "./index.html",
+      "icons": [{ "src": "icon.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "BMI Calculator",
+      "short_name": "BMI Calc",
+      "description": "Open BMI Calculator",
+      "url": "./bmicalc.html",
+      "icons": [{ "src": "icon.png", "sizes": "192x192" }]
+    }
   ]
 }
