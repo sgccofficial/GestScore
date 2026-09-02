@@ -11,6 +11,7 @@
 
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#4f46e5">
+<link rel="apple-touch-icon" href="icon.png">
 
 <style>
 :root{
@@ -498,6 +499,11 @@ function toggleApps(){
 }
 function goBMI(){
   window.location.href = "./index.html";
+}
+
+// PWA
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("sw.js");
 }
 </script>
 
