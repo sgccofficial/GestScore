@@ -1,7 +1,7 @@
 {
   "name": "GestScore",
   "short_name": "GestScore",
-  "start_url": "./index.html",
+  "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#2563eb",
@@ -24,15 +24,15 @@
       "name": "GestScore",
       "short_name": "GestScore",
       "description": "Open GestScore Calculator",
-      "url": "./index.html",
-      "icons": [{ "src": "icon.png", "sizes": "192x192" }]
+      "url": "/",
+      "icons": [{ "src": "icon.png", "sizes": "192x192", "type": "image/png" }]
     },
     {
       "name": "BMI Calculator",
       "short_name": "BMI Calc",
       "description": "Open BMI Calculator",
-      "url": "./bmicalc.html",
-      "icons": [{ "src": "icon.png", "sizes": "192x192" }]
+      "url": "/bmicalc.html",
+      "icons": [{ "src": "icon.png", "sizes": "192x192", "type": "image/png" }]
     }
   ]
 }
