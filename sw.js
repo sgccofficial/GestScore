@@ -1,4 +1,4 @@
-const CACHE_NAME = "gestscore-v5";
+const CACHE_NAME = "gestscore-v6";
 
 const urlsToCache = [
   "/",
@@ -46,15 +46,23 @@ self.addEventListener("fetch", (e) => {
   // Handle page navigation
   if (e.request.mode === "navigate") {
     e.respondWith(
-      fetch(e.request).catch(async () => {
-        // Serve the appropriate cached HTML file based on the request URL
-        const url = new URL(e.request.url);
-        const cachedResponse = await caches.match(url.pathname, { ignoreSearch: true });
-        if (cachedResponse) {
-          return cachedResponse;
-        }
-        return (await caches.match("/", { ignoreSearch: true })) || (await caches.match("/index.html", { ignoreSearch: true }));
-      })
+      fetch(e.request)
+        .then((networkResponse) => {
+          if (networkResponse && networkResponse.ok) {
+            const responseClone = networkResponse.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(e.request, responseClone));
+          }
+          return networkResponse;
+        })
+        .catch(async () => {
+          // Serve the appropriate cached HTML file based on the request URL
+          const url = new URL(e.request.url);
+          const cachedResponse = await caches.match(url.pathname, { ignoreSearch: true });
+          if (cachedResponse) {
+            return cachedResponse;
+          }
+          return (await caches.match("/", { ignoreSearch: true })) || (await caches.match("/index.html", { ignoreSearch: true }));
+        })
     );
     return;
   }
@@ -62,7 +70,14 @@ self.addEventListener("fetch", (e) => {
   // Handle other requests (css, js, images)
   e.respondWith(
     caches.match(e.request, { ignoreSearch: true }).then((res) => {
-      return res || fetch(e.request);
+      const fetchPromise = fetch(e.request).then((networkResponse) => {
+        if (networkResponse && networkResponse.ok) {
+          caches.open(CACHE_NAME).then((cache) => cache.put(e.request, networkResponse.clone()));
+        }
+        return networkResponse;
+      }).catch(() => {});
+
+      return res || fetchPromise;
     })
   );
 });
