@@ -568,7 +568,11 @@ function updateAll(){
   let lmpDate = new Date(lmp.value);
   if(lmpDate > today){ lmp.value=""; return; }
 
-  let refDate = gaDate.value ? new Date(gaDate.value) : today;
+  if(!gaDate.value) {
+    gaDate.value = todayStr;
+  }
+
+  let refDate = new Date(gaDate.value);
   if(refDate < lmpDate){
     gaDate.value = lmp.value;
     refDate = lmpDate;
