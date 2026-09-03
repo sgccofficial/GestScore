@@ -1,4 +1,4 @@
-const CACHE_NAME = "gestscore-v4";
+const CACHE_NAME = "gestscore-v5";
 
 const urlsToCache = [
   "/",
@@ -49,8 +49,9 @@ self.addEventListener("fetch", (e) => {
       fetch(e.request).catch(async () => {
         // Serve the appropriate cached HTML file based on the request URL
         const url = new URL(e.request.url);
-        if (url.pathname.endsWith("bmicalc.html")) {
-          return await caches.match("/bmicalc.html", { ignoreSearch: true });
+        const cachedResponse = await caches.match(url.pathname, { ignoreSearch: true });
+        if (cachedResponse) {
+          return cachedResponse;
         }
         return (await caches.match("/", { ignoreSearch: true })) || (await caches.match("/index.html", { ignoreSearch: true }));
       })
